@@ -23,18 +23,18 @@ can clearly identify the winner. This project will be used to fill out a bracket
 
 The model takes in a range of statistics pulled from both *kenpom.com* and *sports-reference.com* to make accurate predictions. Listed below are the names of each statistical category and what those names actually represent:
 
--NetRtg: Adjusted efficiency margin (KenPom)
--ORtg: Adjusted offensive efficiency margin; points scored per 100 possessions (KenPom)
--DRtg: Adjusted defensive efficiency margin; points allowed per 100 possessions (KenPom)
--AdjT: Adjusted tempo; possessions per 40 minutes (KenPom)
--Luck: Luck rating; deviation in winning percentage between a team’s actual record and their expected record (KenPom)
--SOS_NetRtg: Average adjusted efficiency margin of all opponents over a season (KenPom)
--SOS_ORtg: Average adjusted offensive efficiency margin of all opponents over a season (KenPom)
--SOS_DRtg: Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
--NCSOS_NetRtg: Non conference strength of schedule ranking (KenPom)
--Conf_code: Numeric value that represents the conference a team plays in (KenPom)
--W/L: Wins and Losses for a season (KenPom)
--Round: The round of the tournament the game is being played (sports-reference)
+- **NetRtg**: Adjusted efficiency margin (KenPom)
+- **ORtg**: Adjusted offensive efficiency margin; points scored per 100 possessions (KenPom)
+- **DRtg**: Adjusted defensive efficiency margin; points allowed per 100 possessions (KenPom)
+- **AdjT**: Adjusted tempo; possessions per 40 minutes (KenPom)
+- **Luck**: Luck rating; deviation in winning percentage between a team’s actual record and their expected record (KenPom)
+- **SOS_NetRtg**: Average adjusted efficiency margin of all opponents over a season (KenPom)
+- **SOS_ORtg**: Average adjusted offensive efficiency margin of all opponents over a season (KenPom)
+- **SOS_DRtg**: Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
+- **NCSOS_NetRtg**: Non conference strength of schedule ranking (KenPom)
+- **Conf_code**: Numeric value that represents the conference a team plays in (KenPom)
+- **W/L**: Wins and Losses for a season (KenPom)
+- **Round**: The round of the tournament the game is being played (sports-reference)
 -Seed: The seed in the tournament the team is (sports-reference)
 
 *For all statistics above, the prefix **Opp_** refers to the opponent's statistics for the same category.
