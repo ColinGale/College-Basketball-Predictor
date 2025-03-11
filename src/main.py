@@ -18,8 +18,9 @@ def main():
 
     # Data that the model uses to determine results
     predictors = ["Conf_code", "NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg",
-                  "NCSOS_NetRtg", "W", "L", "Seed", "Opp_NetRtg", "Opp_ORtg", "Opp_DRtg", "Opp_AdjT", "Opp_Luck", "Opp_SOS_NetRtg", "Opp_SOS_ORtg", "Opp_SOS_DRtg",
-                  "Opp_NCSOS_NetRtg", "Opp_W", "Opp_L", "Opp_Seed", "Round"]
+                  "NCSOS_NetRtg", "W", "L", "Seed", "NetRtg_diff", "NetRtg_ratio", "ORtg_diff", "ORtg_ratio", "DRtg_diff", "DRtg_ratio",
+                  "AdjT_ratio", "AdjT_diff", "Luck_diff", "Luck_ratio", "SOS_NetRtg_diff", "SOS_NetRtg_ratio", "SOS_ORtg_diff", "SOS_ORtg_ratio",
+                  "SOS_DRtg_diff", "SOS_DRtg_ratio", "NCSOS_NetRtg_diff", "NCSOS_NetRtg_ratio", "Opp_W", "Opp_L", "Opp_Seed", "Round"]
 
     # Make predictions and get the accuracy and precision score
     rf = RandomForestClassifier(n_estimators=60, min_samples_split=25, random_state=1)
@@ -90,10 +91,17 @@ def merge_all_data(all_years_kenpom, all_years_tournament):
         # Merge the opponent stats
         merged = pd.merge(merged, opponent_stats, on="Opponent", how="inner")
 
+        # Matchup diff and ratio (helps with precision and accuracy being the same)
+        matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg"]
+        for feature in matchup_features:
+            merged[f"{feature}_diff"] = merged[feature] - merged[f"Opp_{feature}"]
+            merged[f"{feature}_ratio"] = merged[feature] / (merged[f"Opp_{feature}"] + 1e-9)
+
         # Remove duplicates using Game ID
         merged.drop_duplicates(subset=["Game ID"], inplace=True)
         merged.drop(columns=["Game ID"], inplace=True)
 
+        merged["NetRtg_diff"] = merged["NetRtg"] - merged["Opp_NetRtg"]
         merged = merged.sort_values(by=["Round", "Region", "Seed"])
         merged_list.append(merged)
 
@@ -161,8 +169,18 @@ def predict_matchup(team1, team2, kenpom):
     # Rename columns in team2_data to represent "Opponent"
     team2_data.columns = ["Opp_" + col if col != "Team" else "Opponent" for col in team2_data.columns]
 
+
     # Combine both teams into one DataFrame
     predictor = pd.concat([team1_data.reset_index(drop=True), team2_data.reset_index(drop=True)], axis=1)
+
+    # Matchup diff and ratio (helps with precision and accuracy being the same)
+    matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg"]
+    for feature in matchup_features:
+        predictor[f"{feature}_diff"] = predictor[feature] - predictor[f"Opp_{feature}"]
+        predictor[f"{feature}_ratio"] = predictor[feature] / predictor[f"Opp_{feature}"]
+
+    predictor.to_csv("test2.csv")
+    print(predictor)
 
     # Manually set Seed/Round to 1
     predictor["Seed"] = 1
