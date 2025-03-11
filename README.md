@@ -35,7 +35,7 @@ The model takes in a range of statistics pulled from both *kenpom.com* and *spor
 - **Conf_code**: Numeric value that represents the conference a team plays in (KenPom)
 - **W/L**: Wins and Losses for a season (KenPom)
 - **Round**: The round of the tournament the game is being played (sports-reference)
--Seed: The seed in the tournament the team is (sports-reference)
+- **Seed**: The seed in the tournament the team is (sports-reference)
 
 *For all statistics above, the prefix **Opp_** refers to the opponent's statistics for the same category.
 
