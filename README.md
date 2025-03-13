@@ -31,7 +31,7 @@ The model takes in a range of statistics pulled from both *kenpom.com* and *spor
 - **Luck:** Luck rating; deviation in winning percentage between a team’s actual record and their expected record (KenPom)
 - **SOS_NetRtg:** Average adjusted efficiency margin of all opponents over a season (KenPom)
 - **SOS_ORtg:** Average adjusted offensive efficiency margin of all opponents over a season (KenPom)
-- **SOS_DRtg:**: Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
+- **SOS_DRtg:** Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
 - **NCSOS_NetRtg:** Non conference strength of schedule ranking (KenPom)
 - **Conf_code:** Numeric value that represents the conference a team plays in (KenPom)
 - **W/L:** Wins and Losses for a season (KenPom)
