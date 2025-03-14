@@ -9,7 +9,7 @@ the freely avaiable advanced stastics from *kenpom.com*, as well as historical t
 a **Random Forest Classification**  model to make predictions. The model is trained on team and tournament data from 2018, 2019, 2022 and then is tested on the 2023 tournament results. This project also extracts data 
 from the current 2025 season and allows the user to use the trained model to make predictions for the 2025 tournament.
 
-As of the most recent version of this predictor, the model has an **75.8% Accuracy Score** and a **75.8% Precision Score**. 
+As of the most recent version of this predictor, the model has an **80.6% Accuracy Score** and a **80.6% Precision Score**. 
 
 ---
 
@@ -17,6 +17,11 @@ As of the most recent version of this predictor, the model has an **75.8% Accura
 This project offers a simple interface for the user to make a prediction of two teams facing off in the 2025 NCAA Tournament. The user must enter in the name of the both desired teams as they are listed on *kenpom.com* in order
 to ensure proper functionality. Once this requirement has been satisfied, the model fits the data from both teams in order to make an accurate prediction of the outcome. The program prints out the result of the game so that the user
 can clearly identify the winner. This project will be used to fill out a bracket in the nationwide **Men's Basketball Bracket Challenge** to see how the predictions compare to some of the best sports analysts in the world.
+
+pretournament_stats.py's main function is to grab data from the team's last 5 games before the tournament. In an effort to respect the request limit
+set by sports-reference.com, pretournament_stats.py's stores all data to a local csv and is therefore not run in the main program. The source code is still
+provided in order to demonstrate how the csv files were made using accurate statistics. Running the pretournament_stats.py's main will take around
+12 minutes, and will retrieve all team averages from the years 2018, 2019, 2022, and 2023.
 
 ---
 
@@ -33,16 +38,20 @@ The model takes in a range of statistics pulled from both *kenpom.com* and *spor
 - **SOS_ORtg:** Average adjusted offensive efficiency margin of all opponents over a season (KenPom)
 - **SOS_DRtg:** Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
 - **NCSOS_NetRtg:** Non conference strength of schedule ranking (KenPom)
-- **Conf_code:** Numeric value that represents the conference a team plays in (KenPom)
 - **W/L:** Wins and Losses for a season (KenPom)
 - **Round:** The round of the tournament the game is being played (sports-reference)
 - **Seed:** The seed in the tournament the team is (sports-reference)
+- **last_5_avg_net:** The average NetRtgs of opponents played in the last 5 games (sports-reference/kenpom)
+- **efg_pct:** A ratio of the average Effective Field Goal Percentage of the last 5 games played, compared with the average EFG across the entire season (weighted by opponent's NetRtg)
+- **fg3_pct:** A ratio of the average Three Point Field Goal Percentage of the last 5 games played compared with the average FG3 across the entire season (weighted by opponent's NetRtg)
+- **tov:** A ratio of the average Turnovers per game of the last 5 games compared with average TOV across the entire season (weighted by opponent's NetRtg)
+- **pt_diff:** The average point differential of the last 5 games
 
-*For all head to head statistics above, (ie NetRtg, ORtg, etc) the suffix **_diff**  and **_ratio** refers to the ratio and difference
-of the team's head to head statistic compared to the opponent's statistics for the same category.
+For all statistics, the suffix **_diff** represents the difference between the opposing team's statistics and the original teams statistics.
+The model only predicts on these **_diff** stats in order to reduce the chance of two teams beating each other in the same game.
 
 Names of the teams are not predictors for the model because the model is trained on tournment data across many years and College Basketball teams have frequent roster
-changes indicating no pattern of strength. The conference is still included because from year to year the top basketball conferences usually remain the same.
+changes indicating no pattern of strength. 
 
 ---
 

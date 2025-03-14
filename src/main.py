@@ -1,12 +1,17 @@
 import pandas as pd
+
+import combine_data
+import pretournament_stats
 from src.kenpom_data import all_years as all_years_kenpom
-from tournament_data import all_years as all_years_tournament
+from combine_data import combined as all_years_tournament
 from sklearn.ensemble import RandomForestClassifier
 
 
 def main():
+    matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg",
+                        "W", "L", "Seed", "last_5_avg_net", "efg_pct", "pt_diff", "fg3_pct", "tov"]
     # Data to train and test the model
-    merged = merge_all_data(all_years_kenpom[:-1], all_years_tournament)
+    merged = merge_all_data(all_years_kenpom[:-1], all_years_tournament, matchup_features)
 
     # Team statistics to make new predictions for user input
     kenpom_2025 = all_years_kenpom[-1]
@@ -17,10 +22,10 @@ def main():
     kenpom_2025 = prepare_dataframe(kenpom_2025, columns_to_float, columns_to_int)
 
     # Data that the model uses to determine results
-    predictors = ["Conf_code", "NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg",
-                  "NCSOS_NetRtg", "W", "L", "Seed", "NetRtg_diff", "NetRtg_ratio", "ORtg_diff", "ORtg_ratio", "DRtg_diff", "DRtg_ratio",
-                  "AdjT_ratio", "AdjT_diff", "Luck_diff", "Luck_ratio", "SOS_NetRtg_diff", "SOS_NetRtg_ratio", "SOS_ORtg_diff", "SOS_ORtg_ratio",
-                  "SOS_DRtg_diff", "SOS_DRtg_ratio", "NCSOS_NetRtg_diff", "NCSOS_NetRtg_ratio", "Opp_W", "Opp_L", "Opp_Seed", "Round"]
+    predictors = ["NetRtg_diff", "ORtg_diff", "DRtg_diff",
+                  "AdjT_diff", "Luck_diff", "SOS_NetRtg_diff", "SOS_ORtg_diff",
+                  "SOS_DRtg_diff", "NCSOS_NetRtg_diff", "W_diff", "L_diff", "Seed_diff", "last_5_avg_net_diff",
+                  "pt_diff_diff", "efg_pct_diff", "fg3_pct_diff", "tov_diff"]
 
     # Make predictions and get the accuracy and precision score
     rf = RandomForestClassifier(n_estimators=60, min_samples_split=25, random_state=1)
@@ -62,7 +67,7 @@ def main():
 
 
 
-def merge_all_data(all_years_kenpom, all_years_tournament):
+def merge_all_data(all_years_kenpom, all_years_tournament, matchup_features):
     merged_list = []
     for year in range(len(all_years_kenpom)):
         merged = pd.merge(all_years_kenpom[year], all_years_tournament[year], on="Team", how="inner")
@@ -78,7 +83,7 @@ def merge_all_data(all_years_kenpom, all_years_tournament):
         merged["Game ID"] = merged["Team"] + "-" + merged["Opponent"] + "-" + merged["Year"].astype(str)
 
         # Create opponent stats
-        opponent_stats_columns = ["Team"] + columns_to_float + ["Rk", "W", "L", "Seed"]
+        opponent_stats_columns = ["Team"] + matchup_features
         opponent_stats = merged[opponent_stats_columns].copy()
 
         # Rename the columns for the opponent stats
@@ -91,11 +96,9 @@ def merge_all_data(all_years_kenpom, all_years_tournament):
         # Merge the opponent stats
         merged = pd.merge(merged, opponent_stats, on="Opponent", how="inner")
 
-        # Matchup diff and ratio (helps with precision and accuracy being the same)
-        matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg"]
+        # Matchup diff (helps with precision and accuracy being the same)
         for feature in matchup_features:
             merged[f"{feature}_diff"] = merged[feature] - merged[f"Opp_{feature}"]
-            merged[f"{feature}_ratio"] = merged[feature] / (merged[f"Opp_{feature}"] + 1e-9)
 
         # Remove duplicates using Game ID
         merged.drop_duplicates(subset=["Game ID"], inplace=True)
@@ -166,6 +169,9 @@ def predict_matchup(team1, team2, kenpom):
         print(f"Invalid Team: {team2}")
         return None
 
+
+    team1_data, team2_data = add_statistics(team1, team1_data, team2, team2_data)
+
     # Rename columns in team2_data to represent "Opponent"
     team2_data.columns = ["Opp_" + col if col != "Team" else "Opponent" for col in team2_data.columns]
 
@@ -173,21 +179,38 @@ def predict_matchup(team1, team2, kenpom):
     # Combine both teams into one DataFrame
     predictor = pd.concat([team1_data.reset_index(drop=True), team2_data.reset_index(drop=True)], axis=1)
 
-    # Matchup diff and ratio (helps with precision and accuracy being the same)
-    matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg"]
-    for feature in matchup_features:
-        predictor[f"{feature}_diff"] = predictor[feature] - predictor[f"Opp_{feature}"]
-        predictor[f"{feature}_ratio"] = predictor[feature] / predictor[f"Opp_{feature}"]
-
-    predictor.to_csv("test2.csv")
-    print(predictor)
-
     # Manually set Seed/Round to 1
     predictor["Seed"] = 1
     predictor["Opp_Seed"] = 1
     predictor["Round"] = 1
 
+    # Matchup diff and ratio (helps with precision and accuracy being the same)
+    matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg",
+                        "W", "L", "Seed", "last_5_avg_net", "efg_pct", "pt_diff", "fg3_pct", "tov"]
+    for feature in matchup_features:
+        predictor[f"{feature}_diff"] = predictor[feature] - predictor[f"Opp_{feature}"]
+
     return predictor
+
+def add_statistics(team1, team1_data, team2, team2_data):
+    team1_url = pretournament_stats.name_to_url(team1)
+    team2_url = pretournament_stats.name_to_url(team2)
+
+    team1_data = pretournament_stats.get_2025_stats(team1_url, team1, team1_data)
+    team2_data = pretournament_stats.get_2025_stats(team2_url, team2, team2_data)
+
+    team1_data["pt_diff"] = team1_data["pt_diff"] / 5
+    team2_data["pt_diff"] = team2_data["pt_diff"] / 5
+
+    team1_data["last_5_avg_net"] = combine_data.get_average_net(team1_data, index=0)
+    team2_data["last_5_avg_net"] = combine_data.get_average_net(team2_data, index=0)
+
+    # Weights the stats based on how difficult the opponents were
+    for stat in ["fg_pct", "efg_pct", "fg3_pct", "tov"]:
+        team1_data[stat] = team1_data[stat] * team1_data["last_5_avg_net"]
+        team2_data[stat] = team2_data[stat] * team2_data["last_5_avg_net"]
+
+    return team1_data, team2_data
 
 
 main()
