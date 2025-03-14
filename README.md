@@ -25,7 +25,7 @@ This project provides an intuitive interface for users to predict matchups in th
 
 This predictor will be used to generate a full tournament bracket and compare results against expert analysts in the **Men's Basketball Bracket Challenge**.
 
-> **Note:** The script `pretournament_stats.py` collects data from the last 5 games of each team before the tournament. To respect *sports-reference.com*’s request limits, this data is stored locally in respective CSV file (team_data_year.csv) and is **not run in the main program**. Running the script manually takes approximately **12 minutes**.
+> **Note:** The script `pretournament_stats.py` collects data from the last 5 games of each team before the tournament. To respect *sports-reference.com*’s request limits, this data is stored locally in respective CSV file (team_stats_year.csv) and is **not run in the main program**. Running the script manually takes approximately **12 minutes**.
 
 ---
 
