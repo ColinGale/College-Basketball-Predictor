@@ -47,8 +47,14 @@ map_values = {
 
     }
 
+def weight_stats(new_df):
+    for stat in ["fg_pct", "efg_pct", "fg3_pct", "tov"]:
+        new_df[stat] = new_df[stat] * new_df["last_5_avg_net"]
 
-def get_average_net(new_df, index):
+    return new_df
+
+
+def get_average_net(new_df, index, kenpom, year):
     if isinstance(new_df.iloc[index]["opp_name_abbr"], list):
         last_5_opponents = new_df.iloc[index]["opp_name_abbr"]
     else:
@@ -80,30 +86,29 @@ def get_average_net(new_df, index):
     return average
 
 
-combined = []
-years = ["2018", "2019", "2022", "2023"]
+def combined_data():
+    combined = []
+    years = ["2018", "2019", "2022", "2023"]
 
-for year in years:
-    index1 = years.index(year)
-    kenpom = all_years_ken[index1]
-    new_df = pd.read_csv(f"team_stats_{year}.csv")
+    for year in years:
+        index1 = years.index(year)
+        kenpom = all_years_ken[index1]
+        new_df = pd.read_csv(f"team_stats_{year}.csv")
 
-    new_df["pt_diff"] = new_df["pt_diff"] / 5
+        new_df["pt_diff"] = new_df["pt_diff"] / 5
 
-    averages = []
-    for index, row in new_df.iterrows():
-        average = get_average_net(new_df, index)
+        averages = []
+        for index, row in new_df.iterrows():
+            average = get_average_net(new_df, index, kenpom, year)
+            averages.append(average)
 
-        averages.append(average)
+        new_df["last_5_avg_net"] = averages
+        new_df["adjusted_pt_diff"] = new_df["pt_diff"] * new_df["last_5_avg_net"]
 
-    new_df["last_5_avg_net"] = averages
-    new_df["adjusted_pt_diff"] = new_df["pt_diff"] * new_df["last_5_avg_net"]
+        new_df = weight_stats(new_df)
 
-    # Weights the stats based on how difficult the opponents were
-    for stat in ["fg_pct", "efg_pct", "fg3_pct", "tov"]:
-        new_df[stat] = new_df[stat] * new_df["last_5_avg_net"]
+        combined.append(new_df)
 
-    combined.append(new_df)
-
+    return combined
 
 
