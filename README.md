@@ -1,72 +1,75 @@
-# College Basketball Tournament Predictor
+# 🏀 College Basketball Tournament Predictor
 
-This project is a **College Basketball Tournament Predictor** that uses **machine learning** to predict the outcome of Men's DI NCAA college basketball games with a focus on the NCAA National Tournament.
-The model is trained on past tournament data and team statistics and is capable of predicting the winner of future matchups based on user input.
-
-## Overview
-The goal of this project is to build a machine learning model that can predict the outcome of **March Madness** basketball games based on team performance metrics. This project uses web scraping techniques to access 
-the freely avaiable advanced stastics from *kenpom.com*, as well as historical tournament game result data from *sports-reference.com*. By taking in this data and merging it together, the project then uses 
-a **Random Forest Classification**  model to make predictions. The model is trained on team and tournament data from 2018, 2019, 2022 and then is tested on the 2023 tournament results. This project also extracts data 
-from the current 2025 season and allows the user to use the trained model to make predictions for the 2025 tournament.
-
-As of the most recent version of this predictor, the model has an **80.6% Accuracy Score** and a **80.6% Precision Score**. 
+This project is a **College Basketball Tournament Predictor** that leverages **machine learning** to predict the outcomes of NCAA Division I Men's Basketball Tournament games. By analyzing historical tournament data and team statistics, the model provides insights into potential winners based on user input.
 
 ---
 
-## Use
-This project offers a simple interface for the user to make a prediction of two teams facing off in the 2025 NCAA Tournament. The user must enter in the name of the both desired teams as they are listed on *kenpom.com* in order
-to ensure proper functionality. Once this requirement has been satisfied, the model fits the data from both teams in order to make an accurate prediction of the outcome. The program prints out the result of the game so that the user
-can clearly identify the winner. This project will be used to fill out a bracket in the nationwide **Men's Basketball Bracket Challenge** to see how the predictions compare to some of the best sports analysts in the world.
+## 📌 Overview
+The goal of this project is to develop a predictive model for **March Madness** matchups using advanced team performance metrics. The model is trained using:
+- **Advanced team statistics** from [kenpom.com](https://kenpom.com)
+- **Historical tournament game results** from [sports-reference.com](https://www.sports-reference.com)
 
-pretournament_stats.py's main function is to grab data from the team's last 5 games before the tournament. In an effort to respect the request limit
-set by sports-reference.com, pretournament_stats.py's stores all data to a local csv and is therefore not run in the main program. The source code is still
-provided in order to demonstrate how the csv files were made using accurate statistics. Running the pretournament_stats.py's main will take around
-12 minutes, and will retrieve all team averages from the years 2018, 2019, 2022, and 2023.
+A **Random Forest Classifier** is employed to make predictions, utilizing tournament data from **2018, 2019, and 2022** for training and testing against **2023** results. The model also integrates **2025 season data**, allowing users to forecast tournament outcomes for the current year.
 
----
-
-## What Data is Used to Make Predictions?
-
-The model takes in a range of statistics pulled from both *kenpom.com* and *sports-reference.com* to make accurate predictions. Listed below are the names of each statistical category and what those names actually represent:
-
-- **NetRtg:** Adjusted efficiency margin (KenPom)
-- **ORtg:** Adjusted offensive efficiency margin; points scored per 100 possessions (KenPom)
-- **DRtg:** Adjusted defensive efficiency margin; points allowed per 100 possessions (KenPom)
-- **AdjT:** Adjusted tempo; possessions per 40 minutes (KenPom)
-- **Luck:** Luck rating; deviation in winning percentage between a team’s actual record and their expected record (KenPom)
-- **SOS_NetRtg:** Average adjusted efficiency margin of all opponents over a season (KenPom)
-- **SOS_ORtg:** Average adjusted offensive efficiency margin of all opponents over a season (KenPom)
-- **SOS_DRtg:** Average adjusted defensive efficiency margin of all opponents over a season (KenPom)
-- **NCSOS_NetRtg:** Non conference strength of schedule ranking (KenPom)
-- **W/L:** Wins and Losses for a season (KenPom)
-- **Round:** The round of the tournament the game is being played (sports-reference)
-- **Seed:** The seed in the tournament the team is (sports-reference)
-- **last_5_avg_net:** The average NetRtgs of opponents played in the last 5 games (sports-reference/kenpom)
-- **efg_pct:** A ratio of the average Effective Field Goal Percentage of the last 5 games played, compared with the average EFG across the entire season (weighted by opponent's NetRtg)
-- **fg3_pct:** A ratio of the average Three Point Field Goal Percentage of the last 5 games played compared with the average FG3 across the entire season (weighted by opponent's NetRtg)
-- **tov:** A ratio of the average Turnovers per game of the last 5 games compared with average TOV across the entire season (weighted by opponent's NetRtg)
-- **pt_diff:** The average point differential of the last 5 games
-
-For all statistics, the suffix **_diff** represents the difference between the opposing team's statistics and the original teams statistics.
-The model only predicts on these **_diff** stats in order to reduce the chance of two teams beating each other in the same game.
-
-Names of the teams are not predictors for the model because the model is trained on tournment data across many years and College Basketball teams have frequent roster
-changes indicating no pattern of strength. 
+**📊 Model Performance:**  
+✔️ **Accuracy:** 80.6%  
+✔️ **Precision:** 80.6%
 
 ---
 
-## Features
-- **Machine Learning Model**: Uses Random Forest Classifier to predict game outcomes.
-- **Data Merging**: Combines team statistics with tournament results.
-- **Matchup Predictions**: Allows the user to enter two teams and predict the winner.
-- **Accuracy/Precision Reporting**: The model outputs its accuracy and precision based on historical test data.
-- **Dynamic Predictions**: Makes predictions for the current year's tournament based on up-to-date team statistics.
+## 🎮 How to Use
+This project provides an intuitive interface for users to predict matchups in the **2025 NCAA Tournament**. To make a prediction:
+1. Enter the names of two teams as listed on [kenpom.com](https://kenpom.com).
+2. The model processes both teams' statistics.
+3. The predicted winner is displayed clearly for easy interpretation.
+
+This predictor will be used to generate a full tournament bracket and compare results against expert analysts in the **Men's Basketball Bracket Challenge**.
+
+> **Note:** The script `pretournament_stats.py` collects data from the last 5 games of each team before the tournament. To respect *sports-reference.com*’s request limits, this data is stored locally in respective CSV file (team_stats_year.csv) and is **not run in the main program**. Running the script manually takes approximately **12 minutes**.
 
 ---
 
-## Acknowledgement
+## 📊 Data Used for Predictions
+The model relies on a set of key basketball statistics sourced from *kenpom.com* and *sports-reference.com*. Below is an overview of these statistics:
 
-This project would not be possible without the amazing resources avaiable on **kenpom.com** and **sports-reference.com**. If you have an interest in more advanced college basketball statistics, please
-check out these websites and support the creators. KenPom also offers a paid subscription for more advanced stats that are helpful to making your own college basketball predictions!
+### **🔹 Team Performance Metrics (KenPom)**
+- **NetRtg** – Adjusted efficiency margin
+- **ORtg** – Offensive efficiency (points per 100 possessions)
+- **DRtg** – Defensive efficiency (points allowed per 100 possessions)
+- **AdjT** – Adjusted tempo (possessions per 40 minutes)
+- **Luck** – Deviation between actual and expected record
+- **SOS_NetRtg** – Strength of schedule (efficiency margin)
+- **SOS_ORtg** – Strength of schedule (offensive efficiency)
+- **SOS_DRtg** – Strength of schedule (defensive efficiency)
+- **NCSOS_NetRtg** – Non-conference strength of schedule ranking
+- **W/L** – Win-loss record
 
+### **🔹 Tournament-Specific Metrics (Sports-Reference)**
+- **Round** – The tournament round the game is played in
+- **Seed** – The team’s seed in the tournament
+- **last_5_avg_net** – Average NetRtg of opponents in the last 5 games
+- **efg_pct** – Weighted effective field goal percentage in last 5 games vs. season average
+- **fg3_pct** – Weighted 3-point field goal percentage in last 5 games vs. season average
+- **tov** – Weighted turnovers per game in last 5 games vs. season average
+- **pt_diff** – Average point differential in last 5 games
+
+📌 **Important:** The model predicts using **statistical differentials** (_diff), meaning it only considers the difference between teams' stats rather than absolute values. This minimizes bias caused by team names, as rosters frequently change from year to year.
+
+---
+
+## 🔥 Features
+✅ **Machine Learning Model** – Utilizes Random Forest Classifier for game outcome prediction.  
+✅ **Data Integration** – Combines team statistics with historical tournament results.  
+✅ **Matchup Predictions** – Allows users to input two teams and receive a game outcome prediction.  
+✅ **Performance Reporting** – Displays accuracy and precision based on test data.  
+✅ **Dynamic 2025 Predictions** – Uses up-to-date statistics for real-time forecasting.  
+
+---
+
+## 🙌 Acknowledgements
+This project was made possible thanks to the fantastic resources provided by **[KenPom](https://kenpom.com)** and **[Sports-Reference](https://www.sports-reference.com)**. If you're interested in advanced college basketball analytics, consider supporting these platforms. KenPom also offers a paid subscription for in-depth statistical insights to improve your own predictions!
+
+---
+
+🏀 **May your brackets be ever in your favor!** 🎉
 
