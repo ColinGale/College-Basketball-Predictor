@@ -9,7 +9,6 @@ def main():
     # Get the team stats for all tournament teams, for each year
     all_years_tournament = combine_data.combined_data()
 
-    all_years_tournament[-2].to_csv("test.csv")
     # All predictive features that will be compared against an opponent's feature
     matchup_features = ["NetRtg", "ORtg", "DRtg", "AdjT", "Luck", "SOS_NetRtg", "SOS_ORtg", "SOS_DRtg", "NCSOS_NetRtg",
                         "W", "L", "Seed", "last_5_avg_net", "efg_pct", "pt_diff", "fg3_pct", "tov"]

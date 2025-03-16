@@ -12,8 +12,8 @@ The goal of this project is to develop a predictive model for **March Madness** 
 A **Random Forest Classifier** is employed to make predictions, utilizing tournament data from **2018, 2019, and 2022** for training and testing against **2023** results. The model also integrates **2025 season data**, allowing users to forecast tournament outcomes for the current year.
 
 **📊 Model Performance:**  
-✔️ **Accuracy:** 80.6%  
-✔️ **Precision:** 80.6%
+✔️ **Accuracy:** 79.0%  
+✔️ **Precision:** 79.0%
 
 ---
 

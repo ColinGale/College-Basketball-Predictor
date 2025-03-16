@@ -32,6 +32,7 @@ map_values = {
         "College of Charleston": "Charleston",
         "Texas A&M-Corpus Christi": "Texas A&M Corpus Chris",
         "UCSB": "UC Santa Barbra",
+        "McNeese State": "McNeese"
     }
 
 reversed_map_values = {value: key for key, value in map_values.items()}
@@ -58,7 +59,8 @@ team_url = {
         "unc-asheville": "north-carolina-asheville",
         "pitt": "pittsburgh",
         "ucsb": "california-santa-barbara",
-        "uc-san-diego": "california-san-diego"
+        "uc-san-diego": "california-san-diego",
+        "byu": "brigham-young"
     }
 
 years = ["2018", "2019", "2022", "2023"]

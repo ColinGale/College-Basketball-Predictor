@@ -47,11 +47,21 @@ map_values = {
 
     }
 
+import numpy as np
+
 def weight_stats(new_df):
-    for stat in ["fg_pct", "efg_pct", "fg3_pct", "tov"]:
-        new_df[stat] = new_df[stat] * new_df["last_5_avg_net"]
+    # Normalize last_5_avg_net using tanh to keep values in [-1, 1]
+    new_df["scaled_net"] = np.tanh(new_df["last_5_avg_net"] / 10)
+
+    # Weight shooting stats positively
+    for stat in ["fg_pct", "efg_pct", "fg3_pct", "pt_diff"]:
+        new_df[stat] = new_df[stat] * (1 + new_df["scaled_net"])  # Scale between 0.5 to 1.5 approx
+
+    # Weight turnovers inversely (lower turnovers are better)
+    new_df["tov"] = (1 + new_df["scaled_net"]) / (new_df["tov"] + 1e-5)
 
     return new_df
+
 
 
 def get_average_net(new_df, index, kenpom, year):
